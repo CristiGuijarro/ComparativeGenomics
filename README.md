@@ -1,7 +1,7 @@
 # Comparative Genomics README
 ## -The Basic Package
 
-### Download canonical proteins for whole genomes:###
+### Download canonical proteins for whole genomes:
 
 `./getEnsEMBLProt.pl <specieslist.txt>
 ./getUniProt.pl <missingspecies.txt>`
