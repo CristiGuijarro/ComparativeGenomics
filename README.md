@@ -29,10 +29,12 @@ This is a quick check for fasta header consistency, 4 letter species codes and a
 
 ### Write the phylogeny table.
 This needs to be done mostly manually. Needs to be a csv format listing:
+
 | Species | Code | Super | Domain | Domain | Subdomain | Group | Kingdom | Ten | Nine | Eight | Seven | Six | Five | Four | Three | Two | One | Class | Order | Family | Genus | NumberOfProteins | Database_Source |
-| ------- | ---- | ----- | ------ | ------ | --------- | ----- | ------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ----- | ----- | ------ | ----- | ---------------- | --------------- |
+| ------- | ---- | ----- | ------ | ------ | --------- | ----- | ------- | --- | ---- | ----- | ----- | --- | ---- | ---- | ----- | --- | --- | ----- | ----- | ------ | ----- | ---------------- | --------------- |
 | Caenorhabditis elegans | cele | Eukaryota | Amorphea | Unikonta | Opisthokonta | Metazoa | Basal2 | Basal3 | Bilateria | Protostomia | Ecdysozoa | Nematoida | Nematoda | Nematoda | Nematoda | Nematoda | Secernentea | Rhabditidae | Rhabditidae | Caenorhabditis | 20362 | EnsEMBL | 
  | Homo sapiens | hsap | Eukaryota | Amorphea | Unikonta | Opisthokonta | Metazoa | Basal2 | Basal3 | Bilateria | Deuterostomia | Chordata | Olfactores | Vertebrata | Tetrapoda | Amniota | Mammalia | Mammalia | Primates | Hominidae | Homo | 23625 | EnsEMBL | 
+
 Save the file as phylogenyTable.csv.
 
 ### Concatenate all spec_prot.fasta into a single allProteins.fasta file.
