@@ -1,12 +1,12 @@
-#Comparative Genomics README
-##-The Basic Package
+# Comparative Genomics README
+## -The Basic Package
 
-###Download canonical proteins for whole genomes:
+### Download canonical proteins for whole genomes:###
 
 `./getEnsEMBLProt.pl <specieslist.txt>
 ./getUniProt.pl <missingspecies.txt>`
 
-###Pass in \n (unix newline) separated list of species with 'Genus_species' format. e.g:
+### Pass in \n (unix newline) separated list of species with 'Genus_species' format. e.g:
 Homo_sapiens
 Felis_cattus
 Canis_lupis
@@ -14,40 +14,40 @@ Drosophila_melanogaster
 
 Any species not found in those databases will be output in missingspecies.txt and missingspecies2.txt. It makes sense to pass the first instance of missingspecies.txt into the alternate program. Species not found will need to be downloaded and altered manually with 4 letter codes in file name and header. E.g. header line for Homo sapiens would begin: ">hsap_".
 
-###Run:
+### Run:
 `./moveNoDup.pl`
 To create Proteomes directory and move all files over for next steps.
 
-###Next:
+### Next:
 `./checkProteins.pl`
 This is a quick check for fasta header consistency, 4 letter species codes and a protein count.
 
-###Further checks on the genomes:
-###Install busco within directory with structure: busco/scripts/run_BUSCO.py
+### Further checks on the genomes:
+### Install busco within directory with structure: busco/scripts/run_BUSCO.py
 `./buscoGenerator.pl
 ./buscoParse.pl`
 
-###Write the phylogeny table.
+### Write the phylogeny table.
 This needs to be done mostly manually. Needs to be a csv format listing:
-|Species|Code|Super|Domain|Domain|Subdomain|Group|Kingdom|10|9|8|7|6|5|4|3|2|1|Class|Order|Family|Genus|NumberOfProteins|Database_Source|
-|-------|----|-----|------|------|---------|-----|-------|--|-|-|-|-|-|-|-|-|-|-----|-----|------|-----|----------------|---------------|
+|Species|Code|Super|Domain|Domain|Subdomain|Group|Kingdom|Ten|Nine|Eight|Seven|Six|Five|Four|Three|Two|One|Class|Order|Family|Genus|NumberOfProteins|Database_Source|
+|-------|----|-----|------|------|---------|-----|-------|---|---|---|---|---|---|---|---|---|---|-----|-----|------|-----|----------------|---------------|
 |Caenorhabditis elegans|cele|Eukaryota|Amorphea|Unikonta|Opisthokonta|Metazoa|Basal2|Basal3|Bilateria|Protostomia|Ecdysozoa|Nematoida|Nematoda|Nematoda|Nematoda|Nematoda|Secernentea|Rhabditidae|Rhabditidae|Caenorhabditis|20362|EnsEMBL|
 |Homo sapiens|hsap|Eukaryota|Amorphea|Unikonta|Opisthokonta|Metazoa|Basal2|Basal3|Bilateria|Deuterostomia|Chordata|Olfactores|Vertebrata|Tetrapoda|Amniota|Mammalia|Mammalia|Primates|Hominidae|Homo|23625|EnsEMBL|
 Save the file as phylogenyTable.csv.
 
-###Concatenate all spec_prot.fasta into a single allProteins.fasta file.
+### Concatenate all spec_prot.fasta into a single allProteins.fasta file.
 `cat Proteomes_Backup/*_prot.fasta > allProteins.fasta`
 
-###Blast each Proteomes_Backup/spec_prot.fasta against allProteins.fasta.
+### Blast each Proteomes_Backup/spec_prot.fasta against allProteins.fasta.
 
-###Concatenate all the .blast files into an allProteins.blast file.
+### Concatenate all the .blast files into an allProteins.blast file.
 `cat *_prot.blast > allProteins.blast`
 
-###Run MCL analysis:
+### Run MCL analysis:
 `mcxdeblast --m9 --line-mode=abc --out=allProteins.mcl allProteins.blast
 mcl <allProteins.mcl> --abc -o finalProteins.mcl`
 
-###Create ComparativeGenomics Database in mySQL.
+### Create ComparativeGenomics Database in mySQL.
 `CREATE DATABASE ComparativeGenomics;
 USE ComparativeGenomics;
 CREATE TABLE `phylogeny` (
@@ -147,10 +147,10 @@ CREATE TABLE `phylogeny` (
   `Databasesource` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;`
 
-###Upload sequences onto database
-./insertfastamysql <allProteins.fasta>
+### Upload sequences onto database
+`./insertfastamysql <allProteins.fasta>`
 
-###Parse the MCL files to input into database:
+### Parse the MCL files to input into database:
 Either (quicker):
 `./parseMCL.pl --<username> --<password> --finalProteins.mcl > mclinserts.sql
 mysql -u<username> -p ComparativeGenomics < mclinserts.sql
@@ -158,11 +158,11 @@ Or (significantly slower but more automated):
 Uncomment system commands in ./parceMCL.pl then run:
 ./parseMCL.pl --<username> --<password> --finalProteins.mcl`
 
-###Produce the fullOccupancy.csv table for visualisation and checking.
+### Produce the fullOccupancy.csv table for visualisation and checking.
 `./fullOccupancy.pl --username "username" --password "password" > fullOccupancy.csv`
 If no password simply press enter when prompted.
 
-###Start collecting some numbers!
+### Start collecting some numbers!
 `./homologyOccupancy.pl --cladelevel "Kingdom" --cladename "Metazoa" > occupancy.sql`
 --cladelevel can be any of the headings in the phylogeny database from Superdomain to Genus. Is case sensitive.
 --cladename is any named item within the chosen --cladelevel column.
