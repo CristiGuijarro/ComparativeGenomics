@@ -3,29 +3,43 @@
 
 ### Download canonical proteins for whole genomes:
 
-`./getEnsEMBLProt.pl <specieslist.txt>
-./getUniProt.pl <missingspecies.txt>`
+```bash
+./getEnsEMBLProt.pl <specieslist.txt>
+```
+```bash
+./getUniProt.pl <missingspecies.txt>
+```
 
 ### Pass in \n (unix newline) separated list of species with 'Genus_species' format. e.g:
 Homo_sapiens
+
 Felis_cattus
+
 Canis_lupis
+
 Drosophila_melanogaster
+
 
 Any species not found in those databases will be output in missingspecies.txt and missingspecies2.txt. It makes sense to pass the first instance of missingspecies.txt into the alternate program. Species not found will need to be downloaded and altered manually with 4 letter codes in file name and header. E.g. header line for Homo sapiens would begin: ">hsap_".
 
 ### Run:
-`./moveNoDup.pl`
+```bash
+./moveNoDup.pl
+```
 To create Proteomes directory and move all files over for next steps.
 
 ### Next:
-`./checkProteins.pl`
+```bash
+./checkProteins.pl
+```
 This is a quick check for fasta header consistency, 4 letter species codes and a protein count.
 
 ### Further checks on the genomes:
 ### Install busco within directory with structure: busco/scripts/run_BUSCO.py
-`./buscoGenerator.pl
-./buscoParse.pl`
+```bash
+./buscoGenerator.pl
+./buscoParse.pl
+```
 
 ### Write the phylogeny table.
 This needs to be done mostly manually. Needs to be a csv format listing:
@@ -38,19 +52,28 @@ This needs to be done mostly manually. Needs to be a csv format listing:
 Save the file as phylogenyTable.csv.
 
 ### Concatenate all spec_prot.fasta into a single allProteins.fasta file.
-`cat Proteomes_Backup/*_prot.fasta > allProteins.fasta`
+```bash
+cat Proteomes_Backup/*_prot.fasta > allProteins.fasta
+```
 
 ### Blast each Proteomes_Backup/spec_prot.fasta against allProteins.fasta.
 
 ### Concatenate all the .blast files into an allProteins.blast file.
-`cat *_prot.blast > allProteins.blast`
+```bash
+cat *_prot.blast > allProteins.blast
+```
 
 ### Run MCL analysis:
-`mcxdeblast --m9 --line-mode=abc --out=allProteins.mcl allProteins.blast
-mcl <allProteins.mcl> --abc -o finalProteins.mcl`
+```bash
+mcxdeblast --m9 --line-mode=abc --out=allProteins.mcl allProteins.blast
+```
+```bash
+mcl <allProteins.mcl> --abc -o finalProteins.mcl
+```
 
 ### Create ComparativeGenomics Database in mySQL.
-`CREATE DATABASE ComparativeGenomics;
+```mysql
+CREATE DATABASE ComparativeGenomics;
 USE ComparativeGenomics;
 CREATE TABLE `phylogeny` (
   `Species` varchar(60) DEFAULT NULL,
@@ -147,28 +170,42 @@ CREATE TABLE `phylogeny` (
   `Genus` varchar(25) DEFAULT NULL,
   `Numberofproteins` int(10) DEFAULT NULL,
   `Databasesource` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;`
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+```
 
 ### Upload sequences onto database
-`./insertfastamysql <allProteins.fasta>`
+```bash
+./insertfastamysql <allProteins.fasta>
+```
 
 ### Parse the MCL files to input into database:
 Either (quicker):
-`./parseMCL.pl --<username> --<password> --finalProteins.mcl > mclinserts.sql
+```bash
+./parseMCL.pl --<username> --<password> --finalProteins.mcl > mclinserts.sql
+```
 mysql -u<username> -p ComparativeGenomics < mclinserts.sql
+
 Or (significantly slower but more automated):
 Uncomment system commands in ./parceMCL.pl then run:
-./parseMCL.pl --<username> --<password> --finalProteins.mcl`
+```bash
+./parseMCL.pl --<username> --<password> --finalProteins.mcl
+```
 
 ### Produce the fullOccupancy.csv table for visualisation and checking.
-`./fullOccupancy.pl --username "username" --password "password" > fullOccupancy.csv`
+```bash
+./fullOccupancy.pl --username "username" --password "password" > fullOccupancy.csv
+```
 If no password simply press enter when prompted.
 
 ### Start collecting some numbers!
-`./homologyOccupancy.pl --cladelevel "Kingdom" --cladename "Metazoa" > occupancy.sql`
+```bash
+./homologyOccupancy.pl --cladelevel "Kingdom" --cladename "Metazoa" > occupancy.sql
+```
 --cladelevel can be any of the headings in the phylogeny database from Superdomain to Genus. Is case sensitive.
 --cladename is any named item within the chosen --cladelevel column.
-`mysql -u<username> -p ComparativeGenomics < occupancy.sql`
+```bash
+mysql -u<username> -p ComparativeGenomics < occupancy.sql
+```
 
 
 
