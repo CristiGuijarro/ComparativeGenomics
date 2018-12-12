@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
+use lib '/home/cristig/Desktop/ComparativeGenomics';
 use queryMySQL;
 use Getopt::Long;
 use List::MoreUtils qw/ uniq /;
